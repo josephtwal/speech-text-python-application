@@ -1,0 +1,1 @@
+#Python voice to text application for a specific words.
