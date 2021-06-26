@@ -2,13 +2,14 @@ import librosa
 import os
 import json
 
-DATASET_PATH = "voice\\audio"
+DATASET_PATH = "dest"
 JSON_PATH = "data.json"
 SAMPLES_TO_CONSIDER = 22050
 
 
 def preprocess_dataset(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512):
     """Extracts MFCCs from music dataset and saves them into a json file.
+
     :param dataset_path (str): Path to dataset
     :param json_path (str): Path to json file used to save MFCCs
     :param num_mfcc (int): Number of coefficients to extract
@@ -32,7 +33,7 @@ def preprocess_dataset(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_len
         if dirpath is not dataset_path:
 
             # save label (i.e., sub-folder name) in the mapping
-            label = dirpath.split("\\")[-1]
+            label = dirpath.split("/")[-1]
             data["mapping"].append(label)
             print("\nProcessing: '{}'".format(label))
 
@@ -61,7 +62,7 @@ def preprocess_dataset(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_len
 
     # save data in json file
     with open(json_path, "w") as fp:
-        json.dump(data, fp, indent=4)
+        json.dump(data, fp, indent=3)
 
 
 if __name__ == "__main__":

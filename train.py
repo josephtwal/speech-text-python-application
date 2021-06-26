@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 
 DATA_PATH = "data.json"
 SAVED_MODEL_PATH = "model.h5"
-EPOCHS = 40
+EPOCHS = 100
 BATCH_SIZE = 32
 PATIENCE = 5
 LEARNING_RATE = 0.0001
@@ -14,9 +14,11 @@ LEARNING_RATE = 0.0001
 
 def load_data(data_path):
     """Loads training dataset from json file.
+
     :param data_path (str): Path to json file containing data
     :return X (ndarray): Inputs
     :return y (ndarray): Targets
+
     """
     with open(data_path, "r") as fp:
         data = json.load(fp)
@@ -29,9 +31,11 @@ def load_data(data_path):
 
 def prepare_dataset(data_path, test_size=0.2, validation_size=0.2):
     """Creates train, validation and test sets.
+
     :param data_path (str): Path to json file containing data
     :param test_size (flaot): Percentage of dataset used for testing
     :param validation_size (float): Percentage of train set used for cross-validation
+
     :return X_train (ndarray): Inputs for the train set
     :return y_train (ndarray): Targets for the train set
     :return X_validation (ndarray): Inputs for the validation set
@@ -57,9 +61,11 @@ def prepare_dataset(data_path, test_size=0.2, validation_size=0.2):
 
 def build_model(input_shape, loss="sparse_categorical_crossentropy", learning_rate=0.0001):
     """Build neural network using keras.
+
     :param input_shape (tuple): Shape of array representing a sample train. E.g.: (44, 13, 1)
     :param loss (str): Loss function to use
     :param learning_rate (float):
+
     :return model: TensorFlow model
     """
 
@@ -79,7 +85,7 @@ def build_model(input_shape, loss="sparse_categorical_crossentropy", learning_ra
     model.add(tf.keras.layers.MaxPooling2D((3, 3), strides=(2,2), padding='same'))
 
     # 3rd conv layer
-    model.add(tf.keras.layers.Conv2D(32, (2, 2), activation='relu',
+    model.add(tf.keras.layers.Conv2D(16, (2, 2), activation='relu',
                                      kernel_regularizer=tf.keras.regularizers.l2(0.001)))
     model.add(tf.keras.layers.BatchNormalization())
     model.add(tf.keras.layers.MaxPooling2D((2, 2), strides=(2,2), padding='same'))
@@ -90,7 +96,7 @@ def build_model(input_shape, loss="sparse_categorical_crossentropy", learning_ra
     tf.keras.layers.Dropout(0.3)
 
     # softmax output layer
-    model.add(tf.keras.layers.Dense(62, activation='softmax'))
+    model.add(tf.keras.layers.Dense(256, activation='softmax'))
 
     optimiser = tf.optimizers.Adam(learning_rate=learning_rate)
 
@@ -107,6 +113,7 @@ def build_model(input_shape, loss="sparse_categorical_crossentropy", learning_ra
 
 def train(model, epochs, batch_size, patience, X_train, y_train, X_validation, y_validation):
     """Trains model
+
     :param epochs (int): Num training epochs
     :param batch_size (int): Samples per batch
     :param patience (int): Num epochs to wait before early stop, if there isn't an improvement on accuracy
@@ -114,6 +121,7 @@ def train(model, epochs, batch_size, patience, X_train, y_train, X_validation, y
     :param y_train (ndarray): Targets for the train set
     :param X_validation (ndarray): Inputs for the validation set
     :param y_validation (ndarray): Targets for the validation set
+
     :return history: Training history
     """
 
@@ -131,6 +139,7 @@ def train(model, epochs, batch_size, patience, X_train, y_train, X_validation, y
 
 def plot_history(history):
     """Plots accuracy/loss for training/validation set as a function of the epochs
+
     :param history: Training history of model
     :return:
     """
@@ -179,3 +188,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+

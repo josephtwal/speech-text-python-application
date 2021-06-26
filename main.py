@@ -7,7 +7,8 @@ import datetime
 from os import path
 from tkinter import filedialog
 from tkinter import messagebox
-
+from pydub import AudioSegment
+from pydub.utils import make_chunks
 
 
 class MainWindow:
@@ -29,7 +30,6 @@ class MainWindow:
         self._Dist_url = tk.StringVar()
         self._status = tk.StringVar()
         self._status.set("---")
-
 
         root.title("Voice2Text")
         root.configure(bg="#eeeeee")
@@ -254,7 +254,8 @@ class MainWindow:
 
     def selectdist_callback(self):
         try:
-            name = filedialog.askdirectory(title='Please select Destination Directory', )
+            name = filedialog.askdirectory(
+                title='Please select Destination Directory', )
             self._Dist_url.set(name)
             # print(name.name)
         except Exception as e:
@@ -278,7 +279,6 @@ class MainWindow:
         self.reset_btn.configure(state="normal")
         self.status_label.update()
 
-
     def reset_callback(self):
         self._pdf = None
         self._file_url.set("")
@@ -293,12 +293,24 @@ class MainWindow:
         else:
             self._status.set("processing")
             self.freeze_controls()
-            AUDIO_FILE = self._file_url.get()
+            AUDIO_FILE = str(self._file_url.get())
             filename = "game_log_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".pdf"
             destination = self._Dist_url.get()
             kss = Keyword_Spotting_Service()
-            self._pdf = pdfkit.from_string("prediction is: " + kss.predict(AUDIO_FILE),
-                                               path.join(destination, filename))
+
+            myaudio = AudioSegment.from_file(AUDIO_FILE , "wav") 
+            chunk_length_ms = 1000  # pydub calculates in millisec
+            chunks = make_chunks(myaudio, chunk_length_ms)  # Make chunks of one sec
+            # Export all of the individual chunks as wav files
+            predictedSentence = ""
+            for i, chunk in enumerate(chunks):
+                    chunk_name = "sample_AI\chunk{0}.wav".format(i)
+                    chunk.export(chunk_name, format="wav")
+            for i, chunk in enumerate(chunks):
+
+                predictedSentence += kss.predict("sample_AI\chunk"+str(i)+".wav")+" "
+            self._pdf = pdfkit.from_string("prediction is: " + predictedSentence,
+                                            path.join(destination, filename))
             self._status.set("Log file generated!")
             self.unfreeze_controls()
 

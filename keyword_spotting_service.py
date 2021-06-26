@@ -7,77 +7,79 @@ SAMPLES_TO_CONSIDER = 22050
 
 class _Keyword_Spotting_Service:
     """Singleton class for keyword spotting inference with trained models.
+
     :param model: Trained model
     """
 
     model = None
     _mapping = [
-       "one",
-        "ten",
-        "substitute",
-        "short",
-        "long",
-        "side",
-        "switch",
-        "eleven",
-        "twelve",
-        "thirteen",
-        "fourteen",
-        "two",
-        "fifteen",
-        "sixteen",
-        "seventeen",
-        "eighteen",
-        "nineteen",
-        "twenty",
-        "libero",
-        "back",
-        "free",
-        "easy",
-        "three",
-        "combo",
-        "position",
-        "from",
-        "distance",
-        "tempo",
-        "with",
-        "player",
-        "team",
-        "home",
-        "away",
-        "four",
-        "perfect",
-        "excellent",
-        "good",
-        "playable",
-        "fail",
-        "error",
-        "serve",
-        "float",
-        "roll",
-        "jump",
-        "five",
-        "dig",
-        "block",
-        "touch",
-        "attack",
-        "ball-out",
-        "ball-in",
-        "help",
-        "point",
-        "game",
-        "set",
-        "six",
-        "match",
-        "seven",
-        "eight",
-        "nine"
+    "attack",
+      "away",
+      "back",
+      "ball-in",
+      "ball-out",
+      "block",
+      "combo",
+      "dig",
+      "distance",
+      "easy",
+      "eight",
+      "eighteen",
+      "eleven",
+      "error",
+      "excellent",
+      "fail",
+      "fifteen",
+      "five",
+      "float",
+      "four",
+      "fourteen",
+      "free",
+      "from",
+      "game",
+      "good",
+      "help",
+      "home",
+      "jump",
+      "libero",
+      "long",
+      "match",
+      "nine",
+      "nineteen",
+      "one",
+      "perfect",
+      "playable",
+      "player",
+      "point",
+      "position",
+      "roll",
+      "serve",
+      "set",
+      "seven",
+      "seventeen",
+      "short",
+      "side",
+      "six",
+      "sixteen",
+      "substitute",
+      "switch",
+      "team",
+      "tempo",
+      "ten",
+      "thirteen",
+      "three",
+      "touch",
+      "twelve",
+      "twenty",
+      "two",
+      "with"
     ]
     _instance = None
 
 
     def predict(self, file_path):
         """
+
         :param file_path (str): Path to audio file to predict
         :return predicted_keyword (str): Keyword predicted by the model
         """
@@ -97,13 +99,15 @@ class _Keyword_Spotting_Service:
 
     def preprocess(self, file_path, num_mfcc=13, n_fft=2048, hop_length=512):
         """Extract MFCCs from audio file.
+
         :param file_path (str): Path of audio file
         :param num_mfcc (int): # of coefficients to extract
         :param n_fft (int): Interval we consider to apply STFT. Measured in # of samples
         :param hop_length (int): Sliding window for STFT. Measured in # of samples
+
         :return MFCCs (ndarray): 2-dim array with MFCC data of shape (# time steps, # coefficients)
         """
-        
+
         # load audio file
         signal, sample_rate = librosa.load(file_path)
 
@@ -119,6 +123,7 @@ class _Keyword_Spotting_Service:
 
 def Keyword_Spotting_Service():
     """Factory function for Keyword_Spotting_Service class.
+
     :return _Keyword_Spotting_Service._instance (_Keyword_Spotting_Service):
     """
 
@@ -141,5 +146,5 @@ if __name__ == "__main__":
     assert kss is kss1
 
     # make a prediction
-    keyword = kss.predict("voice/audio/55/speaker_1-55.wav")
-    print(keyword)  
+    keyword = kss.predict("test\\3f2b358d_nohash_0.wav")
+    print(keyword)
